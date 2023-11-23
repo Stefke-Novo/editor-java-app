@@ -22,8 +22,9 @@
 
 ;change table content
 (defn change-table-content [table rows columns]
-  (.setDataVector (.getModel @table) (to-array-2d (into [] rows)) (to-array columns))
-  (config! @table))
+  (.setDataVector (.getModel table) (to-array-2d (into [] rows)) (to-array columns))
+  (.setPreferredScrollableViewportSize table (.getPreferredSize table))
+  (config! table))
 
 
 

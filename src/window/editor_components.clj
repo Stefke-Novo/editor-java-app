@@ -1,11 +1,12 @@
 (ns window.editor-components
-  (:require [seesaw.core :refer [table button config!]]
+  (:require [seesaw.core :refer [table button config! scrollable]]
+            [seesaw.dev :refer [show-options]]
             [functions.table :refer [change-table-content]]
             [functions.component-models :refer [button-model label-model text-field-model horizontal-panel-model vertical-panel-model simple-panel-model]]))
 
 ;table for editing components
-(def table-editor (atom (table :preferred-size [200 :by 40] :auto-resize :off)))
-
+(def table-editor (table :auto-resize :all-columns))
+(show-options (table))
 ;button for creating component in window
 (def create-entity-btn
   (button
@@ -19,6 +20,7 @@
   (button
     :text "Update component"
     :halign :left))
+
 (def entity-buttons
   [
    (button
@@ -44,12 +46,13 @@
               (change-table-content table-editor text-field-model ["name" "value"]))
             ])
    (button :text "New horizontal panel"
-           :listen
-           [
-            :action
-            (fn [_]
-              (change-table-content table-editor horizontal-panel-model ["name" "value"]))
-            ])
+            :listen
+            [
+             :action
+             (fn [_]
+               (change-table-content table-editor horizontal-panel-model ["name" "value"])
+               )
+             ])
    (button :text "New vertical panel"
            :listen
            [

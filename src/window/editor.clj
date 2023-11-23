@@ -9,13 +9,14 @@
               update-entity-btn
               delete-entity-btn
               entity-buttons
-              ]])
+              ]]
+            [window.component-tree :refer [form-tree, window-map]])
   (:import (javax.swing JFrame)))
 (def east-content (vertical-panel
                     :border [5 "Compound" 10]
                     :items
                     [
-                     @table-editor
+                     (scrollable table-editor)
                      create-entity-btn
                      update-entity-btn
                      delete-entity-btn
@@ -38,11 +39,11 @@
                                      :border [5 "Compound" 10])
                                    :south]
                                   [
-                                   (scrollable east-content :hscroll :as-needed)
+                                   (scrollable east-content :hscroll :never)
                                    :east]
-                                  [(label
-                                     :text "Label 4"
-                                     :border [5 "Compound" 10])
+                                  [(scrollable (form-tree window-map)
+                                               :maximum-size [640 :by 100]
+                                               :hscroll :as-needed)
                                    :west]
                                   [(horizontal-panel
                                      :border [5 "Compound" 10]
