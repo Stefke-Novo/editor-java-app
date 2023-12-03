@@ -17,3 +17,6 @@
   (.revalidate frame)
   (.repaint frame))
 
+(assoc {:name "Zika"} :name "Mika")
+(def ex (atom {:name "Mika"}))
+(swap! ex assoc :name "Zika")

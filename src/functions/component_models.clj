@@ -1,6 +1,7 @@
 (ns functions.component-models
-  (:require [seesaw.core :refer [button text horizontal-panel vertical-panel xyz-panel]]
-            [seesaw.dev :refer [show-options]]))
+  (:require [seesaw.core :refer [button text horizontal-panel vertical-panel xyz-panel text-options]]
+            [seesaw.dev :refer [show-options]]
+            [functions.table :refer [get-data-from-table]]))
 
 (def label-model
   {
@@ -95,7 +96,7 @@
    :border nil
    :bounds nil
    :cursor nil
-   :drag-enabled? nil
+   :drag-enabled? false
    :enabled? true
    :focusable? true
    :font "ARIAL-BOLD-18"
@@ -108,7 +109,6 @@
    :popup nil
    :preferred-size nil
    :size nil
-   :text nil
    :visible? true
    })
 
@@ -158,3 +158,30 @@
    :tip nil
    :visible? true
    })
+(defn sub-model [model entity]
+  (sort (filter (fn [key] (contains? entity key)) (keys model))))
+(defn return-component [model]
+  ;(println "Label model" (sort (sub-model label-model model)))
+  ;(println "Button model" (sort (sub-model button-model model)))
+  ;(println "Text field model" (sort (sub-model text-field-model model)))
+  ;(println "Vertical panel model " (sort (sub-model vertical-panel-model model)))
+  ;(println "Horizontal panel model " (sort (sub-model horizontal-panel-model model)))
+  ;(println "Simple panel model " (sort (sub-model simple-panel-model model)))
+  (condp = (sort (keys model))
+    (sub-model label-model model) {:entity seesaw.core/label}
+    (sub-model button-model model) {:entity seesaw.core/button}
+    (sub-model text-field-model model) {:entity seesaw.core/text}
+    (sub-model vertical-panel-model model) {:entity seesaw.core/vertical-panel :contains :items}
+    (sub-model horizontal-panel-model model) {:entity seesaw.core/horizontal-panel :contains :items}
+    (sub-model simple-panel-model model) {:entity seesaw.core/xyz-panel :contains :items}))
+(defn add-keywords [entity model]
+  (reduce (fn [m v] (if ((first v) entity) (assoc m (first v) (last v)))) model (into [] entity)))
+(defn form-model [content]
+  (condp = (:entity content)
+    seesaw.core/label (add-keywords (:model content) label-model)
+    seesaw.core/button (add-keywords (:model content) button-model)
+    seesaw.core/text (add-keywords (:model content) text-field-model)
+    seesaw.core/vertical-panel (add-keywords (:model content) vertical-panel-model)
+    seesaw.core/horizontal-panel (add-keywords (:model content) horizontal-panel-model)
+    seesaw.core/xyz-panel (add-keywords (:model content) simple-panel-model)))
+
